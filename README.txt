@@ -1,6 +1,5 @@
-Intercom Analytics Take-Home Exercise
+Exercise
 
-Thanks for taking the Intercom data challenge!
 We’re interested in seeing how you work with a small data set in order to generate a recommendation based on your analytics. We’re asking people to return this within a few business days to keep the process moving, but please don’t spend the entire time working on this (we expect it to take 1 hour or less).
 
 When writing up your results, please limit your response to a few pages/slides (including graphs, if necessary), and make sure to submit any files or code to Greenhouse along with the write-up so we can see how you worked through the problem.
