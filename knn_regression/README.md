@@ -47,4 +47,4 @@ We could also give each house price in the data set a weight depending on whethe
 
 ## Authors
 
-* **Wenzhe Ding** - *Initial work*
+* **Wenzhe Ding**
