@@ -16,6 +16,14 @@ We can use the model by downloading the knn_regression.py and nwk.py files.Then 
 from knn_regression import KNN 
 from nwk import NWK
 ```
+There are several modules we needed to create the KNN class and NWK class.
+```
+import numpy as np
+import random
+from datetime import datetime
+import sys
+from scipy.stats import norm
+```
 
 ## Contributing
 
