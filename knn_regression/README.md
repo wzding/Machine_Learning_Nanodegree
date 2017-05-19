@@ -8,6 +8,10 @@ Python implementation of K-nearest neighbors (knn) regression and Nadaraya–Wat
 * data.csv is the data file we used to create models.
 * knn_data.ipynb is an example of how to apply these two models on data.csv.
 
+### Data
+The input data is a house sale dataset, consisting of four columns: latitude, longitude, close_date, close_price. The corresponding data types are float, float, string and integer. The close_date are in format '%Y-%m-%d %H:%M:%S.%f'.
+One example is "36.26001	-98.37648	2014-04-04 21:57:21.422720	79241.864341".
+
 ### Installing
 
 We can use the model by downloading the knn_regression.py and nwk.py files.Then we imported these files for useage.
