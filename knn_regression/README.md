@@ -2,7 +2,7 @@
 
 Python implementation of K-nearest neighbors (knn) regression and Nadaraya–Watson kernel regression. In this project, we built a simple pricing model using k-nearest neighbors and Nadaraya–Watson kernel (nwk) regression. Note that these two models are created to fit the unique structure of the data. It may not be useful for general purpose knn models.
 
-### files
+### Files
 * knn_regression.py is the file with the main function of knn regression.
 * nwk.py is the file with the main function of nwk regression.
 * data.csv is the data file we used to create models.
