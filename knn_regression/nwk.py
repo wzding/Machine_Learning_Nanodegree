@@ -5,6 +5,8 @@ import sys
 
 class NWK(object):
     def __init__(self, h):
+        if h <= 0:
+            sys.exit("Bandwidth must be a positive integer")
         self.h = h
 
     def fit(self, X_train, y_train):
@@ -43,8 +45,7 @@ class NWK(object):
         :rtype: array with the same length as X_test
         '''
         if not len(X_test):
-            print "Test data cannot be empty"
-            return
+            sys.exit( "Test data cannot be empty")
         
         y_test = np.zeros(len(X_test))
         test_time = self.timetosec(X_test)
@@ -55,7 +56,7 @@ class NWK(object):
                 if self.tr_time[j] >= t: 
                     break
                 # calculate euclidean distance
-                dis = np.sum(np.square(np.subtract(X_test[i][:2], self.X_train[j][:2])))
+                dis = np.sqrt(np.sum(np.square(np.subtract(X_test[i][:2], self.X_train[j][:2]))))
                 # add it to list of distances
                 distances.append([dis, j])
         
