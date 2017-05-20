@@ -6,6 +6,8 @@ import sys
 class KNN(object):
 
     def __init__(self, k):
+        if k <= 0:
+            sys.exit("K must be a positive integer")
         self.k = k
 
     def fit(self, X_train, y_train):
@@ -103,8 +105,7 @@ class KNN(object):
         :rtype: array with the same length as X_test
         '''
         if not len(X_test):
-            print "Test data cannot be empty"
-            return
+            sys.exit( "Test data cannot be empty")
 
         y_test = np.zeros(len(X_test))
         test_time = self.timetosec(X_test)
