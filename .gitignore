@@ -1,0 +1,5 @@
+*.DS_Store
+
+customer_segments/.ipynb_checkpoints/*
+smartcab/.ipynb_checkpoints/*
+test/*
