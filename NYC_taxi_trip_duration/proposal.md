@@ -19,7 +19,7 @@ Additionally, being a transportation engineering major, I am especially interest
 
 ### Problem Statement
 _(approx. 1 paragraph)_
-The New York City Taxi & Limousine Commission hosts a kaggle competition (https://www.kaggle.com/c/nyc-taxi-trip-duration) to challenge data scientists to build a model that predicts the total ride duration of taxi trips in New York City, which also serves as the goal of this project. Available features include pickup time, geo-coordinates, number of passengers, and several others. The evaluation metric for this project is Root Mean Squared Logarithmic Error. In addition, we will conduct comprehensive Exploratory Data Analysis before building model for prediction as the insights may be valuable for the community. 
+The New York City Taxi & Limousine Commission hosts a kaggle competition (https://www.kaggle.com/c/nyc-taxi-trip-duration) to challenge data scientists to build a model that predicts the total ride duration of taxi trips in New York City, which also serves as the goal of this project. Available features include pickup time, geo-coordinates, number of passengers, and several others. The evaluation metric for this project is Root Mean Squared Logarithmic Error. In addition, we will conduct comprehensive Exploratory Data Analysis before building models for prediction as the insights may be both valuable for our model building as well as the community. 
 
 ### Datasets and Inputs
 _(approx. 2-3 paragraphs)_
