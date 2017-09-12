@@ -19,23 +19,25 @@ Additionally, being a transportation engineering major, I am especially interest
 
 ### Problem Statement
 _(approx. 1 paragraph)_
+
 The New York City Taxi & Limousine Commission hosts a kaggle competition (https://www.kaggle.com/c/nyc-taxi-trip-duration) to challenge data scientists to build a model that predicts the total ride duration of taxi trips in New York City, which also serves as the goal of this project. Available features include pickup time, geo-coordinates, number of passengers, and several others. The evaluation metric for this project is Root Mean Squared Logarithmic Error. In addition, we will conduct comprehensive Exploratory Data Analysis before building models for prediction as the insights may be both valuable for our model building as well as the community. 
 
 ### Datasets and Inputs
 _(approx. 2-3 paragraphs)_
+
 Both the train data and test data are provided by the competition, which is under the folder "data" and title as "train.csv" and "test.csv" respectively. The training set contains 1458644 trip records and the testing set contains 625134 trip records. Detailed explanation of data fields are shown below, which is also available at the "Data" section of the competition (https://www.kaggle.com/c/nyc-taxi-trip-duration/data). 
 
-id - a unique identifier for each trip
-vendor_id - a code indicating the provider associated with the trip record
-pickup_datetime - date and time when the meter was engaged
-dropoff_datetime - date and time when the meter was disengaged
-passenger_count - the number of passengers in the vehicle (driver entered value)
-pickup_longitude - the longitude where the meter was engaged
-pickup_latitude - the latitude where the meter was engaged
-dropoff_longitude - the longitude where the meter was disengaged
-dropoff_latitude - the latitude where the meter was disengaged
-store_and_fwd_flag - This flag indicates whether the trip record was held in vehicle memory before sending to the vendor because the vehicle did not have a connection to the server - Y=store and forward; N=not a store and forward trip
-trip_duration - duration of the trip in seconds
+* id - a unique identifier for each trip
+* vendor_id - a code indicating the provider associated with the trip record
+* pickup_datetime - date and time when the meter was engaged
+* dropoff_datetime - date and time when the meter was disengaged
+* passenger_count - the number of passengers in the vehicle (driver entered value)
+* pickup_longitude - the longitude where the meter was engaged
+* pickup_latitude - the latitude where the meter was engaged
+* dropoff_longitude - the longitude where the meter was disengaged
+* dropoff_latitude - the latitude where the meter was disengaged
+* store_and_fwd_flag - This flag indicates whether the trip record was held in vehicle memory before sending to the vendor because the vehicle did not have a connection to the server - Y=store and forward; N=not a store and forward trip
+* trip_duration - duration of the trip in seconds
 
 ### Solution Statement
 _(approx. 1 paragraph)_
