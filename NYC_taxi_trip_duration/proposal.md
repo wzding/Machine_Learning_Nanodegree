@@ -1,7 +1,7 @@
 # Machine Learning Engineer Nanodegree
-## Capstone Proposal
-Joe Udacity  
-December 31st, 2050
+## Capstone Proposal  
+Wenzhe(Emma) Ding
+September 12th, 2017
 
 ## Proposal
 _(approx. 2-3 pages)_
