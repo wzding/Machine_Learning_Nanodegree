@@ -14,6 +14,7 @@ There are currently over 13,000 licensed taxicabs and over 50,000 taxicab driver
 * http://toddwschneider.com/posts/analyzing-1-1-billion-nyc-taxi-and-uber-trips-with-a-vengeance/.
 * https://www.kaggle.com/headsortails/nyc-taxi-eda-update-the-fast-the-curious
 * https://www.kaggle.com/gaborfodor/from-eda-to-the-top-lb-0-367
+
 Additionally, being a transportation engineering major, I am especially interested in investigating publich trasportation data to study people's travel behavior. 
 
 ### Problem Statement
