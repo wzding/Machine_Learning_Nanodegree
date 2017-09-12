@@ -10,11 +10,11 @@ _(approx. 2-3 pages)_
 ### Domain Background
 _(approx. 1-2 paragraphs)_
 
-There are currently over 13,000 licensed taxicabs and over 50,000 taxicab drivers providing transportation for passengers in New York City via street hails. The New York City Taxi & Limousine Commission (TLC) has released data with detailed information of each taxi trip from January 2009 through December 2016. To understand taxi trip patterns and answer questions such as what is the rush hour of NYC taxi trips, how are daily commute trips affect the volumn of taxi trip, what features are relevant to predict taxi trip duration, etc. we need to investigate such data sets. In fact, many data scientists as well as researchers have donen analyzsis using such pbulic taxi data, some are listed below.
+There are currently over 13,000 licensed taxicabs and over 50,000 taxicab drivers providing transportation for passengers in New York City via street hails. The New York City Taxi & Limousine Commission (TLC) has released data with detailed information of each taxi trip from January 2009 through December 2016. To understand taxi trip patterns and answer questions such as what is the rush hour of NYC taxi trips, how are daily commute trips affect the volumn of taxi trip, what features are relevant to predict taxi trip duration, etc. we need to investigate such data sets. In fact, many data scientists as well as researchers have donen analyzsis using such public taxi data, some are listed below.
 * http://toddwschneider.com/posts/analyzing-1-1-billion-nyc-taxi-and-uber-trips-with-a-vengeance/.
 * https://www.kaggle.com/headsortails/nyc-taxi-eda-update-the-fast-the-curious
 * https://www.kaggle.com/gaborfodor/from-eda-to-the-top-lb-0-367
-Addtionally, being a transportation engineering major, I am especially interested in investigating publich trasportation data to study people's travel behavior. 
+Additionally, being a transportation engineering major, I am especially interested in investigating publich trasportation data to study people's travel behavior. 
 
 ### Problem Statement
 _(approx. 1 paragraph)_
@@ -22,8 +22,19 @@ The New York City Taxi & Limousine Commission hosts a kaggle competition (https:
 
 ### Datasets and Inputs
 _(approx. 2-3 paragraphs)_
+Both the train data and test data are provided by the competition, which is under the folder "data" and title as "train.csv" and "test.csv" respectively. The training set contains 1458644 trip records and the testing set contains 625134 trip records. Detailed explanation of data fields are shown below, which is also available at the "Data" section of the competition (https://www.kaggle.com/c/nyc-taxi-trip-duration/data). 
 
-In this section, the dataset(s) and/or input(s) being considered for the project should be thoroughly described, such as how they relate to the problem and why they should be used. Information such as how the dataset or input is (was) obtained, and the characteristics of the dataset or input, should be included with relevant references and citations as necessary It should be clear how the dataset(s) or input(s) will be used in the project and whether their use is appropriate given the context of the problem.
+id - a unique identifier for each trip
+vendor_id - a code indicating the provider associated with the trip record
+pickup_datetime - date and time when the meter was engaged
+dropoff_datetime - date and time when the meter was disengaged
+passenger_count - the number of passengers in the vehicle (driver entered value)
+pickup_longitude - the longitude where the meter was engaged
+pickup_latitude - the latitude where the meter was engaged
+dropoff_longitude - the longitude where the meter was disengaged
+dropoff_latitude - the latitude where the meter was disengaged
+store_and_fwd_flag - This flag indicates whether the trip record was held in vehicle memory before sending to the vendor because the vehicle did not have a connection to the server - Y=store and forward; N=not a store and forward trip
+trip_duration - duration of the trip in seconds
 
 ### Solution Statement
 _(approx. 1 paragraph)_
