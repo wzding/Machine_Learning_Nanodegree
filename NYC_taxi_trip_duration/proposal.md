@@ -5,22 +5,20 @@ Wenzhe(Emma) Ding
 September 12th, 2017
 
 ## Proposal
-_(approx. 2-3 pages)_
 
 ### Domain Background
-_(approx. 1-2 paragraphs)_
 
 There are currently over 13,000 licensed taxicabs and over 50,000 taxicab drivers providing transportation for passengers in New York City via street hails. The New York City Taxi & Limousine Commission (TLC) has released data with detailed information of each taxi trip from January 2009 through December 2016. To understand taxi trip patterns and answer questions such as what is the rush hour of NYC taxi trips, how are daily commute trips affect the volumn of taxi trip, what features are relevant to predict taxi trip duration, etc. we need to investigate such data sets. In fact, many data scientists as well as researchers have donen analyzsis using such public taxi data, some are listed below.
 * http://toddwschneider.com/posts/analyzing-1-1-billion-nyc-taxi-and-uber-trips-with-a-vengeance/.
 * https://www.kaggle.com/headsortails/nyc-taxi-eda-update-the-fast-the-curious
 * https://www.kaggle.com/gaborfodor/from-eda-to-the-top-lb-0-367
 
-Additionally, being a transportation engineering major, I am especially interested in investigating publich trasportation data to study people's travel behavior. 
+Additionally, being a transportation engineering major, I am especially interested in investigating publich trasportation data to study people's travelling behavior. 
 
 ### Problem Statement
 _(approx. 1 paragraph)_
 
-The New York City Taxi & Limousine Commission hosts a kaggle competition (https://www.kaggle.com/c/nyc-taxi-trip-duration) to challenge data scientists to build a model that predicts the total ride duration of taxi trips in New York City, which also serves as the goal of this project. Available features include pickup time, geo-coordinates, number of passengers, and several others. The evaluation metric for this project is Root Mean Squared Logarithmic Error. In addition, we will conduct comprehensive Exploratory Data Analysis before building models for prediction as the insights may be both valuable for our model building as well as the community. 
+The New York City Taxi & Limousine Commission hosts a kaggle competition (https://www.kaggle.com/c/nyc-taxi-trip-duration) to challenge data scientists to build a model that predicts the total ride duration of taxi trips in New York City, which also serves as the goal of this project. Available features include pickup time, geo-coordinates, number of passengers, and several others. The evaluation metric for this project is Root Mean Squared Logarithmic Error. 
 
 ### Datasets and Inputs
 _(approx. 2-3 paragraphs)_
@@ -52,19 +50,25 @@ In this section, provide the details for a benchmark model or result that relate
 ### Evaluation Metrics
 _(approx. 1-2 paragraphs)_
 
+The evaluation metric for this project is Root Mean Squared Logarithmic Error (https://www.kaggle.com/wiki/RootMeanSquaredLogarithmicError).
+
+ 
+Where:
+
+ϵϵ is the RMSLE value (score)
+nn is the total number of observations in the (public/private) data set,
+pipi is your prediction of trip duration, and
+aiai is the actual trip duration for ii. 
+log(x)log⁡(x) is the natural logarithm of x
+
 In this section, propose at least one evaluation metric that can be used to quantify the performance of both the benchmark model and the solution model. The evaluation metric(s) you propose should be appropriate given the context of the data, the problem statement, and the intended solution. Describe how the evaluation metric(s) are derived and provide an example of their mathematical representations (if applicable). Complex evaluation metrics should be clearly defined and quantifiable (can be expressed in mathematical or logical terms).
 
 ### Project Design
 _(approx. 1 page)_
 
+Firstly, we will conduct comprehensive Exploratory Data Analysis before building models for prediction as the insights can be both valuable for our model building as well as the community. 
+
 In this final section, summarize a theoretical workflow for approaching a solution given the problem. Provide thorough discussion for what strategies you may consider employing, what analysis of the data might be required before being used, or which algorithms will be considered for your implementation. The workflow and discussion that you provide should align with the qualities of the previous sections. Additionally, you are encouraged to include small visualizations, pseudocode, or diagrams to aid in describing the project design, but it is not required. The discussion should clearly outline your intended workflow of the capstone project.
 
+
 -----------
-
-**Before submitting your proposal, ask yourself. . .**
-
-- Does the proposal you have written follow a well-organized structure similar to that of the project template?
-- Is each section (particularly **Solution Statement** and **Project Design**) written in a clear, concise and specific fashion? Are there any ambiguous terms or phrases that need clarification?
-- Would the intended audience of your project be able to understand your proposal?
-- Have you properly proofread your proposal to assure there are minimal grammatical and spelling mistakes?
-- Are all the resources used for this project correctly cited and referenced?
