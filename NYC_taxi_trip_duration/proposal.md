@@ -35,6 +35,8 @@ Both the train data and test data are provided by the competition, which is also
 * store_and_fwd_flag - This flag indicates whether the trip record was held in vehicle memory before sending to the vendor because the vehicle did not have a connection to the server - Y=store and forward; N=not a store and forward trip
 * trip_duration - duration of the trip in seconds
 
+Basically, the train data would be split into train-validation set and we will use only train data for model training. Validation set will be used for parameter selection and to avoid overfitting of the model being built. Test data will be used to evaluation the performance of our model. 
+
 ### Solution Statement
 
 One solution to this problem is gradient boosted trees regressor using XGBoost (a package in python http://xgboost.readthedocs.io/en/latest/), which is one of ensemble methods to deal with supervised learning problems. The main principle behind this method is that a group of “weak learners” can come together to form a “strong learner”. hey typically less prone to overfitting and make the model more robust,unlikely to be influenced by small changes in the training data. The input of this algorithm is a set of numerical features and the output is a number, which is also the prediction of the algorithm. 
@@ -52,6 +54,7 @@ Firstly, we will conduct comprehensive Exploratory Data Analysis (EDA) before bu
 * dealing with missing values if needed
 * remove outliers
 * extract useful features for model
+* feature engineering if needed
 Afterwards, we will implement algorithms which will includes split the training data into train-validation set, train XGBregressor, analyze feature importance, and score test set. 
 Finally, we'll compared the performance of the best performed decision tree model and gradient boosted tree model.
 
