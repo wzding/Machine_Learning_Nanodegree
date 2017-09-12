@@ -8,16 +8,16 @@ September 12th, 2017
 
 ### Domain Background
 
-There are currently over 13,000 licensed taxicabs and over 50,000 taxicab drivers providing transportation for passengers in New York City via street hails(http://www.nyc.gov/html/tlc/html/industry/yellow_taxi.shtml). The New York City Taxi & Limousine Commission (TLC) has released data with detailed information of each taxi trip from January 2016 through July 2016. To understand taxi trip patterns and answer questions such as what is the rush hour of NYC taxi trips, how are daily commute trips affect the volumn of taxi trip, what features are relevant to predict taxi trip duration, etc. we need to investigate such data sets. In fact, many data scientists as well as researchers have donen analyzsis using such public taxi data, some are listed below.
-* http://toddwschneider.com/posts/analyzing-1-1-billion-nyc-taxi-and-uber-trips-with-a-vengeance/ uses an older dataset
+There are currently over 13,000 licensed taxicabs and over 50,000 taxicab drivers providing transportation for passengers in New York City via street hails(http://www.nyc.gov/html/tlc/html/industry/yellow_taxi.shtml). The New York City Taxi & Limousine Commission (TLC) has released data with detailed information of each taxi trip from January 2016 through July 2016. To understand taxi trip patterns and answer questions such as what is the rush hours of NYC taxi trips, what features are relevant to predict taxi trip duration, what are most popular taxi regions at different time of the day and etc. we need to investigate such data sets. In fact, many data scientists as well as researchers have done analysis using such public taxi data, some are listed below.
+* http://toddwschneider.com/posts/analyzing-1-1-billion-nyc-taxi-and-uber-trips-with-a-vengeance/ uses an older dataset to analyze travelling patterns
 * https://www.kaggle.com/headsortails/nyc-taxi-eda-update-the-fast-the-curious
 * https://www.kaggle.com/gaborfodor/from-eda-to-the-top-lb-0-367
 
-Additionally, being a transportation engineering major, I am especially interested in studying people's travelling behavior by investigating publich trasportation data. 
+Additionally, being a transportation engineering major, I am especially interested in studying people's travelling behavior by investigating public transportation data. 
 
 ### Problem Statement
 
-The New York City Taxi & Limousine Commission hosts a kaggle competition (https://www.kaggle.com/c/nyc-taxi-trip-duration) to challenge data scientists to build a model that predicts the total ride duration of taxi trips in New York City, which also serves as the goal of this project. Available features in the data include pickup time, geo-coordinates, number of passengers, and several others.  Root Mean Squared Logarithmic Error is used to compare the performances among models.
+The New York City Taxi & Limousine Commission hosts a kaggle competition (https://www.kaggle.com/c/nyc-taxi-trip-duration) to challenge data scientists to build a model that predicts the total ride duration of taxi trips in New York City, which also serves as the major goal of this project. Available features in the data include pickup time, geo-coordinates, number of passengers, and several others. Root Mean Squared Logarithmic Error is used to compare the performances among models.
 
 ### Datasets and Inputs
 
@@ -37,11 +37,11 @@ Both the train data and test data are provided by the competition, which is also
 
 ### Solution Statement
 
-One solution to this problem is gradient boosted trees regressor using XGBoost (a package in python http://xgboost.readthedocs.io/en/latest/), which is an ensemble method to deal with supervised learning problems. The input of this algorithm is a set of numerical features and the output is a number, which is also the prediction of the algorithm. 
+One solution to this problem is gradient boosted trees regressor using XGBoost (a package in python http://xgboost.readthedocs.io/en/latest/), which is one of ensemble methods to deal with supervised learning problems. The main principle behind this method is that a group of “weak learners” can come together to form a “strong learner”. hey typically less prone to overfitting and make the model more robust,unlikely to be influenced by small changes in the training data. The input of this algorithm is a set of numerical features and the output is a number, which is also the prediction of the algorithm. 
 
 ### Benchmark Model
 
-A benchmark model is decision tree model, which is widely used for supervised learning problems. 
+A benchmark model is decision tree regression model, which is widely used for supervised learning problems.  It uses a tree like structure to specify a series of conditions that are tested to determine the value for a sample. 
 
 ### Evaluation Metrics
 
