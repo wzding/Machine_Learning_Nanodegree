@@ -8,8 +8,8 @@ September 12th, 2017
 
 ### Domain Background
 
-There are currently over 13,000 licensed taxicabs and over 50,000 taxicab drivers providing transportation for passengers in New York City via street hails(http://www.nyc.gov/html/tlc/html/industry/yellow_taxi.shtml). The New York City Taxi & Limousine Commission (TLC) has released data with detailed information of each taxi trip from January 2009 through July 2016. To understand taxi trip patterns and answer questions such as what is the rush hour of NYC taxi trips, how are daily commute trips affect the volumn of taxi trip, what features are relevant to predict taxi trip duration, etc. we need to investigate such data sets. In fact, many data scientists as well as researchers have donen analyzsis using such public taxi data, some are listed below.
-* http://toddwschneider.com/posts/analyzing-1-1-billion-nyc-taxi-and-uber-trips-with-a-vengeance/.
+There are currently over 13,000 licensed taxicabs and over 50,000 taxicab drivers providing transportation for passengers in New York City via street hails(http://www.nyc.gov/html/tlc/html/industry/yellow_taxi.shtml). The New York City Taxi & Limousine Commission (TLC) has released data with detailed information of each taxi trip from January 2016 through July 2016. To understand taxi trip patterns and answer questions such as what is the rush hour of NYC taxi trips, how are daily commute trips affect the volumn of taxi trip, what features are relevant to predict taxi trip duration, etc. we need to investigate such data sets. In fact, many data scientists as well as researchers have donen analyzsis using such public taxi data, some are listed below.
+* http://toddwschneider.com/posts/analyzing-1-1-billion-nyc-taxi-and-uber-trips-with-a-vengeance/ uses an older dataset
 * https://www.kaggle.com/headsortails/nyc-taxi-eda-update-the-fast-the-curious
 * https://www.kaggle.com/gaborfodor/from-eda-to-the-top-lb-0-367
 
