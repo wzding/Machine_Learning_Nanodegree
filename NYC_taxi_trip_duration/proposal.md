@@ -10,16 +10,15 @@ _(approx. 2-3 pages)_
 ### Domain Background
 _(approx. 1-2 paragraphs)_
 
-There are currently over 13,000 licensed taxicabs and over 50,000 taxicab drivers providing transportation for passengers in New York City via street hails. The New York City Taxi & Limousine Commission (TLC) has released data with detailed information of each taxi trip from January 2009 through December 2016. To understand taxi trip patterns and answer questions such as what is the rush hour of NYC taxi trips, how are daily commute trips affect the volumn of taxi trip, what features are relevant to predict taxi trip duration, etc. we need to investigate such data sets. In fact, many data scientists as well as researchers have donen analyzsis using such pbulic taxi data, some are shown as below.
+There are currently over 13,000 licensed taxicabs and over 50,000 taxicab drivers providing transportation for passengers in New York City via street hails. The New York City Taxi & Limousine Commission (TLC) has released data with detailed information of each taxi trip from January 2009 through December 2016. To understand taxi trip patterns and answer questions such as what is the rush hour of NYC taxi trips, how are daily commute trips affect the volumn of taxi trip, what features are relevant to predict taxi trip duration, etc. we need to investigate such data sets. In fact, many data scientists as well as researchers have donen analyzsis using such pbulic taxi data, some are listed below.
 * http://toddwschneider.com/posts/analyzing-1-1-billion-nyc-taxi-and-uber-trips-with-a-vengeance/.
 * https://www.kaggle.com/headsortails/nyc-taxi-eda-update-the-fast-the-curious
 * https://www.kaggle.com/gaborfodor/from-eda-to-the-top-lb-0-367
-Addtionally, being a transportation engineering major, I am especially interested in investigating publich trasportation data to analyze people's travel patterns. 
+Addtionally, being a transportation engineering major, I am especially interested in investigating publich trasportation data to study people's travel behavior. 
 
 ### Problem Statement
 _(approx. 1 paragraph)_
-The New York City Taxi & Limousine Commission hosts a kaggle competition (https://www.kaggle.com/c/nyc-taxi-trip-duration) to challenge data scientists to build a model that predicts the total ride duration of taxi trips in New York City.   
-In this section, clearly describe the problem that is to be solved. The problem described should be well defined and should have at least one relevant potential solution. Additionally, describe the problem thoroughly such that it is clear that the problem is quantifiable (the problem can be expressed in mathematical or logical terms) , measurable (the problem can be measured by some metric and clearly observed), and replicable (the problem can be reproduced and occurs more than once).
+The New York City Taxi & Limousine Commission hosts a kaggle competition (https://www.kaggle.com/c/nyc-taxi-trip-duration) to challenge data scientists to build a model that predicts the total ride duration of taxi trips in New York City, which also serves as the goal of this project. Available features include pickup time, geo-coordinates, number of passengers, and several others. The evaluation metric for this project is Root Mean Squared Logarithmic Error. In addition, we will conduct comprehensive Exploratory Data Analysis before building model for prediction as the insights may be valuable for the community. 
 
 ### Datasets and Inputs
 _(approx. 2-3 paragraphs)_
