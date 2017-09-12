@@ -10,10 +10,11 @@ _(approx. 2-3 pages)_
 ### Domain Background
 _(approx. 1-2 paragraphs)_
 
-There are currently over 13,000 licensed taxicabs and over 50,000 taxicab drivers providing transportation for passengers in all five boroughs via street hails.  The New York City Taxi & Limousine Commission (TLC) has released data with detailed information of each taxi trip. To understand taxi trip patterns and answer questions such as what is the rush hour of NYC taxi trips, how are daily commute trips affect the volumn of taxi trip, what features are relevant to predict taxi trip duration, etc. we need to investigate such data sets. Many people have donen analyzsis using such pbulic taxi data, some are shown as below.
-* http://toddwschneider.com/posts/analyzing-1-1-billion-nyc-taxi-and-uber-trips-with-a-vengeance/. 
-Being a transportation engineering major, I am especially interested in investigating publich trasportation data to analyze people's travel patterns. 
-In this section, provide brief details on the background information of the domain from which the project is proposed. Historical information relevant to the project should be included. It should be clear how or why a problem in the domain can or should be solved. Related academic research should be appropriately cited in this section, including why that research is relevant. Additionally, a discussion of your personal motivation for investigating a particular problem in the domain is encouraged but not required.
+There are currently over 13,000 licensed taxicabs and over 50,000 taxicab drivers providing transportation for passengers in New York City via street hails. The New York City Taxi & Limousine Commission (TLC) has released data with detailed information of each taxi trip from January 2009 through December 2016. To understand taxi trip patterns and answer questions such as what is the rush hour of NYC taxi trips, how are daily commute trips affect the volumn of taxi trip, what features are relevant to predict taxi trip duration, etc. we need to investigate such data sets. In fact, many data scientists as well as researchers have donen analyzsis using such pbulic taxi data, some are shown as below.
+* http://toddwschneider.com/posts/analyzing-1-1-billion-nyc-taxi-and-uber-trips-with-a-vengeance/.
+* https://www.kaggle.com/headsortails/nyc-taxi-eda-update-the-fast-the-curious
+* https://www.kaggle.com/gaborfodor/from-eda-to-the-top-lb-0-367
+Addtionally, being a transportation engineering major, I am especially interested in investigating publich trasportation data to analyze people's travel patterns. 
 
 ### Problem Statement
 _(approx. 1 paragraph)_
