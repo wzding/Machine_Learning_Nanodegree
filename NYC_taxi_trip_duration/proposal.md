@@ -8,12 +8,16 @@ September 12th, 2017
 
 ### Domain Background
 
-There are currently over 13,000 licensed taxicabs and over 50,000 taxicab drivers providing transportation for passengers in New York City via street hails(http://www.nyc.gov/html/tlc/html/industry/yellow_taxi.shtml). The New York City Taxi & Limousine Commission (TLC) has released data with detailed information of each taxi trip from January 2016 through July 2016. To understand taxi trip patterns and answer questions such as what is the rush hours of NYC taxi trips, what features are relevant to predict taxi trip duration, what are most popular taxi regions at different time of the day and etc. we need to investigate such data sets. In fact, many data scientists as well as researchers have done analysis using such public taxi data, some are listed below.
-* http://toddwschneider.com/posts/analyzing-1-1-billion-nyc-taxi-and-uber-trips-with-a-vengeance/ uses an older dataset to analyze travelling patterns
-* https://www.kaggle.com/headsortails/nyc-taxi-eda-update-the-fast-the-curious
-* https://www.kaggle.com/gaborfodor/from-eda-to-the-top-lb-0-367
+There are currently over 13,000 licensed taxicabs and over 50,000 taxicab drivers providing transportation for passengers in New York City via street hails(http://www.nyc.gov/html/tlc/html/industry/yellow_taxi.shtml). The New York City Taxi & Limousine Commission (TLC) has released data with detailed information of each taxi trip from January 2016 through July 2016. To understand trip patterns and answer more specific questions such as what is the rush hours of NYC taxi trips, what features are relevant to predict taxi trip duration, what are most popular taxi regions at different time of the day and etc. we need to investigate such data sets. In fact, many data scientists have done analysis using such public taxi data, some are listed below.
+* http://toddwschneider.com/posts/analyzing-1-1-billion-nyc-taxi-and-uber-trips-with-a-vengeance/ used an older NYC taxi data (January 2009 to June 2015)to analyze travelling patterns. It also presented findings of how Uber has changed the landscape for taxis.
+* https://www.kaggle.com/headsortails/nyc-taxi-eda-update-the-fast-the-curious aimed at predicting the duration of taxi rides in NYC. It integrated NYC weather data and fastest routes data to study their impact on the taxi trip duration. 
+* https://www.kaggle.com/gaborfodor/from-eda-to-the-top-lb-0-367 focused on the feature extraction and aimed at finding best possible feature set for grandient boost tree algorithm.
+In addition to these efforts, reasearchers have done extensive study to learn transportation mode using machine learning techniques. A few research papers are showned below:
+* http://ieeexplore.ieee.org/document/7063936/?reload=true compared the performance of several methods including K-nearest neighbor, support vector machines (SVMs), and tree-based models that comprise a single decision tree, bagging, and random forest (RF) methods. 
+* http://ieeexplore.ieee.org/abstract/document/7366148/ applied principal component analysis and semi-supervised Gaussian mixture models to classify different transportation modes. 
+* a deep learning method is used to identify the transportation modes of smartphone users in http://ieeexplore.ieee.org/abstract/document/8006227/.
 
-Additionally, being a transportation engineering major, I am especially interested in studying people's travelling behavior by investigating public transportation data. 
+Furthermore, being a transportation engineering major, I am especially interested in studying people's travelling behavior by investigating public transportation data. 
 
 ### Problem Statement
 
@@ -35,28 +39,31 @@ Both the train data and test data are provided by the competition, which is also
 * store_and_fwd_flag - This flag indicates whether the trip record was held in vehicle memory before sending to the vendor because the vehicle did not have a connection to the server - Y=store and forward; N=not a store and forward trip
 * trip_duration - duration of the trip in seconds
 
-Basically, the train data would be split into train-validation set and we will use only train data for model training. Validation set will be used for parameter selection and to avoid overfitting of the model being built. Test data will be used to evaluation the performance of our model. 
+Basically, the data points from "train.csv" would be split into 80% training set and 20% validation set and we will use only training set for model training. Validation set will be used for parameter selection and to avoid overfitting of the model being built. Because there is no labels on test data, we will upload the model predictions to the kaggle competition and obtain the scores for the test data, which serves as evaluation of the model performance. 
 
 ### Solution Statement
 
-One solution to this problem is gradient boosted trees regressor using XGBoost (a package in python http://xgboost.readthedocs.io/en/latest/), which is one of ensemble methods to deal with supervised learning problems. The main principle behind this method is that a group of “weak learners” can come together to form a “strong learner”. hey typically less prone to overfitting and make the model more robust,unlikely to be influenced by small changes in the training data. The input of this algorithm is a set of numerical features and the output is a number, which is also the prediction of the algorithm. 
+The first step is exploratory data analysis (EDA) and both univariate and bivariate analysis will be conduncted to study data features. Possible techniques include histogram plot, time series analysis, etc. Understanding the difference between train and test set is also necessary becasue if there is huge differenc between them then feature extracted from train set would not apply to test set. 
+There are many possible methods to predict trip duration and a popular one is gradient boosted trees regressor using XGBoost (a package in python http://xgboost.readthedocs.io/en/latest/), which is one of ensemble methods to deal with supervised learning problems. The main principle behind this method is that a group of “weak learners” can come together to form a “strong learner”. They typically less prone to overfitting and make the model more robust,unlikely to be influenced by small changes in the training data. The input of this algorithm is a set of numerical features and the output is a number, which is also the prediction of the algorithm. 
+We will implement two methods other than gradient boosted trees regressor, such as decision tree regression and linear regression to compare the performances among them.
 
 ### Benchmark Model
 
-A benchmark model is decision tree regression model, which is widely used for supervised learning problems.  It uses a tree like structure to specify a series of conditions that are tested to determine the value for a sample. 
+A benchmark model is decision tree regression model, which is widely used for supervised learning problems. It uses a tree like structure to specify a series of conditions that are tested to determine the value for a sample. 
 
 ### Evaluation Metrics
 
 The evaluation metric for this project is Root Mean Squared Logarithmic Error (RMSLE), which is defined here (https://www.kaggle.com/wiki/RootMeanSquaredLogarithmicError). RMSLE penalizes an under-predicted estimate greater than an over-predicted estimate.
 
 ### Project Design
-Firstly, we will conduct comprehensive Exploratory Data Analysis (EDA) before building models for prediction as the insights can be both valuable for our model building as well as the community. A few analysis of the data needs to be done in this process:
-* dealing with missing values if needed
-* remove outliers
-* extract useful features for model
-* feature engineering if needed
-Afterwards, we will implement algorithms which will includes split the training data into train-validation set, train XGBregressor, analyze feature importance, and score test set. 
-Finally, we'll compared the performance of the best performed decision tree model and gradient boosted tree model.
+Firstly, we will conduct comprehensive EDA before building models for prediction as the insights can be both valuable for our model building as well as the community. A few analysis of the data needs to be done in this process:
+* check whether there are missing values in the features of interest
+* remove outliers: we could use z-scores, box plots, scatter plots to screen outliers. We will try using inter quartile range (IQR) to detect outliers.
+* feature engineering: after EDA, we could extract useful features that have impact on time duration and these features could include in model training as well
+Afterwards, we will implement algorithms which will includes split the training data into train-validation set and train XGBregressor. We could obtain feature importance from the results of XGBregressor, which could use as a measurement to filter out useless features. 
+Finally, we'll compared the performance of the best performed decision tree model (obtained by grid search) and gradient boosted tree model. Since there's no labels in the test set, performance will be compared based by the rank on the kaggle competition.
+
+
 
 
 -----------
