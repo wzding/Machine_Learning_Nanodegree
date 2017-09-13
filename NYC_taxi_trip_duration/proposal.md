@@ -9,11 +9,13 @@ September 12th, 2017
 ### Domain Background
 
 There are currently over 13,000 licensed taxicabs and over 50,000 taxicab drivers providing transportation for passengers in New York City via street hails(http://www.nyc.gov/html/tlc/html/industry/yellow_taxi.shtml). The New York City Taxi & Limousine Commission (TLC) has released data with detailed information of each taxi trip from January 2016 through July 2016. To understand trip patterns and answer more specific questions such as what is the rush hours of NYC taxi trips, what features are relevant to predict taxi trip duration, what are most popular taxi regions at different time of the day and etc. we need to investigate such data sets. In fact, many data scientists have done analysis using such public taxi data, some are listed below.
+
 * http://toddwschneider.com/posts/analyzing-1-1-billion-nyc-taxi-and-uber-trips-with-a-vengeance/ used an older NYC taxi data (January 2009 to June 2015) to analyze travelling patterns. It also presented findings of how Uber has changed the landscape for taxis.
 * https://www.kaggle.com/headsortails/nyc-taxi-eda-update-the-fast-the-curious aimed at predicting the duration of taxi rides in NYC. It integrated NYC weather data and fastest routes data to study their impact on the taxi trip duration. 
 * https://www.kaggle.com/gaborfodor/from-eda-to-the-top-lb-0-367 focused on the feature extraction and aimed at finding best possible feature set for grandient boost tree algorithm.
 
 In addition to these efforts, reasearchers have done extensive study to learn transportation mode using machine learning techniques. A few research papers are showned below:
+
 * http://ieeexplore.ieee.org/document/7063936/?reload=true compared the performance of several methods including K-nearest neighbor, support vector machines, and tree-based models that comprise a single decision tree, bagging, and random forest methods. 
 * http://ieeexplore.ieee.org/abstract/document/7366148/ applied principal component analysis and semi-supervised Gaussian mixture models to classify different transportation modes. 
 * a deep learning method is used to identify different transportation modes of smartphone users in http://ieeexplore.ieee.org/abstract/document/8006227/.
@@ -58,6 +60,7 @@ The evaluation metric for this project is Root Mean Squared Logarithmic Error (R
 
 ### Project Design
 Firstly, we will conduct comprehensive EDA before building models for prediction as the insights can be valuable for both our model building as well as the community. A few analysis of the data needs to be done in this process:
+
 * check whether there are missing values in the features of interest
 * remove outliers: we could use z-scores, box plots, scatter plots to screen outliers. We will try using inter quartile range (IQR) to detect outliers. If this is not a profer method, we could use linear regression to fit to a data set, then rank the errors, and throw out the top 10% and refit iteratively as a test for stability. 
 * feature engineering: after EDA, we could extract useful features that have impact on the target variable and these features could include in model training as well.
