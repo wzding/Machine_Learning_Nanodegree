@@ -46,7 +46,7 @@ Basically, the data points from "train.csv" would be split into 80% training set
 
 ### Solution Statement
 
-The first step is exploratory data analysis (EDA) and both univariate and bivariate analysis will be conduncted to study data features. Possible techniques include histogram plot, time series analysis, etc. Understanding the difference between train and test set is also necessary becasue if there is huge differenc between them then feature extracted from train set would not apply to test set. 
+The first step is exploratory data analysis (EDA) and both univariate and bivariate analysis will be conduncted to study data features. Possible techniques include histogram plot, time series analysis, etc. Understanding the difference between train and test set is also necessary because if there is huge difference between them then feature extracted from train set would not apply to test set. 
 
 There are many possible methods to predict trip duration and one of them is gradient boosted trees regressor using XGBoost (a package in python http://xgboost.readthedocs.io/en/latest/), which is one of ensemble methods to deal with supervised learning problems. The main principle behind this method is that a group of “weak learners” can come together to form a “strong learner”. They typically less prone to overfitting and make the model more robust,unlikely to be influenced by small changes in the training data. The input of this algorithm is a set of numerical features and the output is a number, which is also the prediction of the algorithm. We will implement two methods other than gradient boosted trees regressor, which are decision tree regression and linear regression to compare the performances among them.
 
