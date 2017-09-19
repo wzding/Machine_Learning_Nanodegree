@@ -1,5 +1,9 @@
 *.DS_Store
-
-customer_segments/.ipynb_checkpoints/*
+customer_segmentsaved_models/
+.ipynb_checkpoints/*
 smartcab/.ipynb_checkpoints/*
 test/*
+NYC_taxi_trip_duration/data/
+dog-project/saved_models/
+titanic_survival_exploration/.ipynb_checkpoints/
+titanic_survival_exploration/__pycache__/
