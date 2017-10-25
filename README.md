@@ -7,6 +7,8 @@ This repository contains project files and lecture notes for Udacity's Machine L
 ## Program Outline:
 
 ### Part 1: Machine Learning Foundations
+- project: [Titanic Survival Exploration](https://github.com/wzding/Machine_Learning_Nanodegree/tree/master/titanic_survival_exploration)
+
 - project: [Predicting Boston Housing Prices](https://github.com/wzding/Machine_Learning_Nanodegree/tree/master/boston_housing) 
 
 ### Part 2: Career: Orientation
