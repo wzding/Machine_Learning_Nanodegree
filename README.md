@@ -7,7 +7,7 @@ This repository contains project files and lecture notes for Udacity's Machine L
 ## Program Outline:
 
 ### Part 1: Machine Learning Foundations
-- project: [Titanic Survival Exploration](https://github.com/wzding/Machine_Learning_Nanodegree/tree/master/titanic_survival_exploration)
+- Introductory project: [Titanic Survival Exploration](https://github.com/wzding/Machine_Learning_Nanodegree/tree/master/titanic_survival_exploration)
 
 - project: [Predicting Boston Housing Prices](https://github.com/wzding/Machine_Learning_Nanodegree/tree/master/boston_housing) 
 
@@ -23,6 +23,7 @@ This repository contains project files and lecture notes for Udacity's Machine L
 - project: [Train a Smartcab to Drive](https://github.com/wzding/Machine_Learning_Nanodegree/tree/master/smartcab)
 
 ### Part 6: Deep Learning
+- Mini Project: [Student Admissions in Keras](https://github.com/wzding/Machine_Learning_Nanodegree/tree/master/imdb)
 - project: [Dog Breed Recognition](https://github.com/wzding/Machine_Learning_Nanodegree/tree/master/dog-project) 
 
 ### Part 7: Machine Learning Capstone
