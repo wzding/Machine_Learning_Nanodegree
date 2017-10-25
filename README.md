@@ -1,4 +1,27 @@
-# machine-learning
-Content for Udacity's Machine Learning curriculum, which includes projects and their descriptions.
+# Machine Learning Engineer Nanodegreee
 
-<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>. Please refer to [Udacity Terms of Service](https://www.udacity.com/legal) for further information.
+Udacity's Machine Learning EngineerNanodegree project files. The Machine Learning Engineer program is an online certification intended to prepare students to become machine learning engineers.
+
+This repository contains project files and lecture notes for Udacity's Machine Learning Engineer Nanodegree program which I worked on during 14 June, 2017 and 20 Sep. 2017.
+
+## Program Outline:
+
+### Part 1: Machine Learning Foundations
+- project: [Predicting Boston Housing Prices](https://github.com/wzding/Machine_Learning_Nanodegree/tree/master/boston_housing) 
+
+### Part 2: Career: Orientation
+
+### Part 3: Supervised Learning
+- project: [Finding Donors for Charity](https://github.com/wzding/Machine_Learning_Nanodegree/tree/master/finding_donors)
+
+### Part 4: Unsupervised Learning
+- project: [Creating Customer Segments](https://github.com/wzding/Machine_Learning_Nanodegree/tree/master/customer_segments)
+
+### Part 5: Reinforcement Learning
+- project: [Train a Smartcab to Drive](https://github.com/wzding/Machine_Learning_Nanodegree/tree/master/smartcab)
+
+### Part 6: Deep Learning
+- project: [Dog Breed Recognition](https://github.com/wzding/Machine_Learning_Nanodegree/tree/master/dog-project) 
+
+### Part 7: Machine Learning Capstone
+- project: [NYC Taxi Trips](https://github.com/wzding/Machine_Learning_Nanodegree/tree/master/NYC_taxi_trip_duration)
