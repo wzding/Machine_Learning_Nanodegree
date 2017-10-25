@@ -1,6 +1,6 @@
 # Machine Learning Engineer Nanodegreee
 
-Udacity's Machine Learning EngineerNanodegree project files. The Machine Learning Engineer program is an online certification intended to prepare students to become machine learning engineers.
+Udacity's Machine Learning Engineer Nanodegree project files. The Machine Learning Engineer program is an online certification intended to prepare students to become machine learning engineers.
 
 This repository contains project files and lecture notes for Udacity's Machine Learning Engineer Nanodegree program which I worked on during 14 June, 2017 and 20 Sep. 2017.
 
