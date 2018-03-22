@@ -65,7 +65,7 @@ def cluster_results(reduced_data, preds, centers, pca_samples):
 	cmap = cm.get_cmap('gist_rainbow')
 
 	# Color the points based on assigned cluster
-	for i, cluster in plot_data.groupby('Cluster'):   
+	for i, cluster in plot_data.groupby('Cluster'):
 	    cluster.plot(ax = ax, kind = 'scatter', x = 'Dimension 1', y = 'Dimension 2', \
 	                 color = cmap((i)*1.0/(len(centers)-1)), label = 'Cluster %i'%(i), s=30);
 
@@ -75,7 +75,7 @@ def cluster_results(reduced_data, preds, centers, pca_samples):
 	               alpha = 1, linewidth = 2, marker = 'o', s=200);
 	    ax.scatter(x = c[0], y = c[1], marker='$%d$'%(i), alpha = 1, s=100);
 
-	# Plot transformed sample points 
+	# Plot transformed sample points
 	ax.scatter(x = pca_samples[:,0], y = pca_samples[:,1], \
 	           s = 150, linewidth = 4, color = 'black', marker = 'x');
 
@@ -87,23 +87,23 @@ def biplot(good_data, reduced_data, pca):
     '''
     Produce a biplot that shows a scatterplot of the reduced
     data and the projections of the original features.
-    
+
     good_data: original data, before transformation.
                Needs to be a pandas dataframe with valid column names
     reduced_data: the reduced data (the first two dimensions are plotted)
     pca: pca object that contains the components_ attribute
 
     return: a matplotlib AxesSubplot object (for any additional customization)
-    
+
     This procedure is inspired by the script:
     https://github.com/teddyroland/python-biplot
     '''
 
     fig, ax = plt.subplots(figsize = (14,8))
-    # scatterplot of the reduced data    
-    ax.scatter(x=reduced_data.loc[:, 'Dimension 1'], y=reduced_data.loc[:, 'Dimension 2'], 
+    # scatterplot of the reduced data
+    ax.scatter(x=reduced_data.loc[:, 'Dimension 1'], y=reduced_data.loc[:, 'Dimension 2'],
         facecolors='b', edgecolors='b', s=70, alpha=0.5)
-    
+
     feature_vectors = pca.components_.T
 
     # we use scaling factors to make the arrows easier to see
@@ -111,16 +111,16 @@ def biplot(good_data, reduced_data, pca):
 
     # projections of the original features
     for i, v in enumerate(feature_vectors):
-        ax.arrow(0, 0, arrow_size*v[0], arrow_size*v[1], 
+        ax.arrow(0, 0, arrow_size*v[0], arrow_size*v[1],
                   head_width=0.2, head_length=0.2, linewidth=2, color='red')
-        ax.text(v[0]*text_pos, v[1]*text_pos, good_data.columns[i], color='black', 
+        ax.text(v[0]*text_pos, v[1]*text_pos, good_data.columns[i], color='black',
                  ha='center', va='center', fontsize=18)
 
     ax.set_xlabel("Dimension 1", fontsize=14)
     ax.set_ylabel("Dimension 2", fontsize=14)
     ax.set_title("PC plane with original feature projections.", fontsize=16);
     return ax
-    
+
 
 def channel_results(reduced_data, outliers, pca_samples):
 	'''
@@ -132,14 +132,14 @@ def channel_results(reduced_data, outliers, pca_samples):
 	try:
 	    full_data = pd.read_csv("customers.csv")
 	except:
-	    print "Dataset could not be loaded. Is the file missing?"
+	    print("Dataset could not be loaded. Is the file missing?")
 	    return False
 
 	# Create the Channel DataFrame
 	channel = pd.DataFrame(full_data['Channel'], columns = ['Channel'])
 	channel = channel.drop(channel.index[outliers]).reset_index(drop = True)
 	labeled = pd.concat([reduced_data, channel], axis = 1)
-	
+
 	# Generate the cluster plot
 	fig, ax = plt.subplots(figsize = (14,8))
 
@@ -149,11 +149,11 @@ def channel_results(reduced_data, outliers, pca_samples):
 	# Color the points based on assigned Channel
 	labels = ['Hotel/Restaurant/Cafe', 'Retailer']
 	grouped = labeled.groupby('Channel')
-	for i, channel in grouped:   
+	for i, channel in grouped:
 	    channel.plot(ax = ax, kind = 'scatter', x = 'Dimension 1', y = 'Dimension 2', \
 	                 color = cmap((i-1)*1.0/2), label = labels[i-1], s=30);
-	    
-	# Plot transformed sample points   
+
+	# Plot transformed sample points
 	for i, sample in enumerate(pca_samples):
 		ax.scatter(x = sample[0], y = sample[1], \
 	           s = 200, linewidth = 3, color = 'black', marker = 'o', facecolors = 'none');
