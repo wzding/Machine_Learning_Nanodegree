@@ -103,10 +103,10 @@ def survival_stats(data, outcomes, key, filters = []):
         nonsurv_vals = all_data[all_data['Survived'] == 0][key].reset_index(drop = True)
         surv_vals = all_data[all_data['Survived'] == 1][key].reset_index(drop = True)
         plt.hist(nonsurv_vals, bins = bins, alpha = 0.6,
-                 color = 'red', label = 'Did not survive')
+                 color = '#d62728', label = 'Did not survive')
         plt.hist(surv_vals, bins = bins, alpha = 0.6,
-                 color = 'green', label = 'Survived')
-
+                 color = '#2ca02c', label = 'Survived')
+  
         # Add legend to plot
         plt.xlim(0, bins.max())
         plt.legend(framealpha = 0.8)
@@ -136,8 +136,8 @@ def survival_stats(data, outcomes, key, filters = []):
 
         # Display each category's survival rates
         for i in np.arange(len(frame)):
-            nonsurv_bar = plt.bar(i-bar_width, frame.loc[i]['NSurvived'], width = bar_width, color = 'r')
-            surv_bar = plt.bar(i, frame.loc[i]['Survived'], width = bar_width, color = 'g')
+            nonsurv_bar = plt.bar(i-bar_width, frame.loc[i]['NSurvived'], width = bar_width, color = '#d62728', alpha = 0.6)
+            surv_bar = plt.bar(i, frame.loc[i]['Survived'], width = bar_width, color = '#2ca02c', alpha = 0.6)
 
             plt.xticks(np.arange(len(frame)), values)
             plt.legend((nonsurv_bar[0], surv_bar[0]),('Did not survive', 'Survived'), framealpha = 0.8)
