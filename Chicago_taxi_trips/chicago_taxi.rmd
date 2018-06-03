@@ -1,0 +1,641 @@
+---
+title: "Explore Chicago Taxi Trips"
+output:
+  html_document: default
+  pdf_document: default
+author: "Wenzhe(Emma) Ding"
+---
+
+========================================================
+
+> **Introduction**: In this project, we will be analyzing City of Chicago taxi trip data to understand patterns in taxi ridership. The main taxi dataset is a publicly available government data which allow us to gain access to more than 200,000 taxi rides in Chicago from January 1 2017 to January 7 2017.
+
+> **Data Source**: This dataset could be downloaded  from the link below. It includes the following information for each taxi trip: taxi company, both trip start and end times, length of the trip in both time and distance, starting and ending census tract, exact Starting and ending location, trip cost. Data source: 
+https://data.cityofchicago.org/Transportation/Taxi-Trips/wrvz-psew/data. Detailed introduction of this data set is on http://digital.cityofchicago.org/index.php/chicago-taxi-data-released/.
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, packages}
+library(ggplot2)
+library(ggmap)
+library(maps)
+library(dplyr)
+library(ggthemes)
+library(psych)
+library(grid)
+library(gridExtra)
+library(RColorBrewer)
+```
+
+```{r echo=FALSE, Load_the_Data}
+# Load the Data
+taxi <- read.csv("chicago_taxi_20170101_0107.csv")
+nrow(taxi) # number of observations
+colnames(taxi)
+```
+
+> **Filter out outlier**: Our dataset consists of 12 variables, with 219,003 observations. As it is dictated in the official document, "the dataset is collected from a variety of hardware and software under real-world conditions", there are some extreme values that likely to be wrong. For example, there are trips with both mileage and trip duration equal to zero, while its cost is over $1000. For a certain trip, we believe it is not plausible to have a mileage over 160 but trip time is less than 10 seconds. We simply deleted such records for further analysis. After cleaning the ourliers, we have a total of 218832 trips.
+
+```{r echo=FALSE, Outliers}
+# filter out outliers
+taxi <- taxi[(taxi$Trip.Miles<500)&(taxi$Fare < 3000)&
+               (taxi$Trip.Seconds < 40000),]
+taxi <- taxi[!((taxi$Trip.Miles < 1)&(taxi$Fare > 100)),]
+taxi <- taxi[!((taxi$Trip.Miles < 1)&(taxi$Trip.Seconds > 10000)),]
+taxi <- taxi[!((taxi$Trip.Seconds > 30000)&(taxi$Fare < 100)),]
+taxi <- taxi[!((taxi$Trip.Miles < 2)&(taxi$Trip.Seconds > 20000)),]
+
+nrow(taxi)
+```
+
+> **Create new features**: The variable 'Trip.Start.Timestamp' contains information of trip time, but it will be easier to use if we have variables such as Date, hour, weekday of the trip. So we created some new features based on that variable.
+
+```{r echo=FALSE, New_variable}
+time <- taxi$Trip.Start.Timestamp
+taxi$Date <- sapply(time, substring, 1, 5)
+taxi$Date <- as.factor(taxi$Date) 
+taxi$Hour <- sapply(time, substring, 12, 13)
+taxi$Hour <- sapply(taxi$Hour, as.numeric)
+taxi$AP <- sapply(time, substring,21,22)
+
+taxi[which(taxi$AP =='PM' & taxi$Hour != 12), ]$Hour <- 
+  taxi[which(taxi$AP =='PM' & taxi$Hour != 12), ]$Hour + 12
+taxi[which(taxi$AP =='AM' & taxi$Hour == 12), ]$Hour <- 0 
+
+# convert trip duration to minute
+taxi$Trip.Min <- taxi$Trip.Seconds / 60  
+
+# categorize time into morning, afternoon, evening, and night
+taxi$Time <- "Morning"
+levels(taxi$Time) <- c(levels(taxi$Time),"Afternoon","Evening","Night") 
+taxi$Time[taxi$Hour %in% c(12,13,14,15,16,17)]  <- "Afternoon"
+taxi$Time[taxi$Hour %in% c(0,1,2,3,4,5)]  <- "Night"
+taxi$Time[taxi$Hour %in% c(18,19,20,21,22,23)]  <- "Evening"
+
+# categorize days into weekday and weekend
+taxi$Week <- "Weekday"
+levels(taxi$Week) <- c(levels(taxi$Week),"Weekend") 
+taxi$Week[taxi$Date %in% c('01/06','01/01')]  <- "Weekend"
+```
+
+# Univariate Plots Section
+
+> **Trip duration**: Our first question is about the distribution of trip duration.
+
+```{r echo=FALSE, Univariate_Plots1}
+summary(taxi$Trip.Min)
+
+density_plot <- function(dat, column, xlab,titile ){
+  q <- quantile(dat[,column], 0.998)  
+  # the range of x axis include 99.8% of all data
+  p <- ggplot(data=dat, aes_string(x = column)) + 
+    geom_density(fill = '#99d6ff', alpha=0.4) +
+    geom_vline(aes(xintercept=median(dat[,column])),
+    colour='red', linetype='dashed', lwd=1) +
+    xlab(xlab) +
+    xlim(0,q) +
+    ggtitle(titile)
+return(p)
+}
+
+density_plot(taxi,"Trip.Min", "trip duration (min)",
+             "Trip Duration Distribution")  
+
+```
+
+The duration of taxi trip spreads from 0 to more than 400 minutes. In this density plot, we set the range of x axis as the range which encompasses 99.8% of the data so that we could get a more clear idea of the distribution of the majority of taxi trips. The most common trip time is around 5 minutes, and half of the trips have time less than 10 minutes.Why there is a drop of density around 1 minute? We need to explore more variables to answer this question.
+
+```{r echo=FALSE, Univariate_Plots1_1}
+# classify trip duration into three categories
+taxi$Length <- 'medium'
+taxi[taxi$Trip.Min < 6,]$Length <- 'short'
+taxi[taxi$Trip.Min > 11,]$Length <- 'long'
+table(taxi$Length)
+```
+
+We created another variable 'Length' to categorize trips based on its duration. Short, medium, long trips correspond to trips whose duration less than 6 minutes, between 6 and 11 minutes, and more than 11 minutes. Each category has one third of total trips.
+ 
+> **Trip distance**: I wonder what this plot looks like across other variables, such as mileage and fare.
+
+```{r echo=FALSE, Univariate_Plots2}
+summary(taxi$Trip.Miles)
+
+density_plot(taxi,"Trip.Miles", "trip distance (mile)",
+             "Trip Distance Distribution")  
+
+```
+
+The desity plot has a peak around two miles or so. Similar as the trip duration plot, there is a drop of number of trips with mileage round 1 mile or so. We also see a small bump around 18 miles.
+
+> **Fare of taxi trips**: Trip cost is another interesting variable to explore.
+
+```{r echo=FALSE, Univariate_Plots3}
+summary(taxi$Fare)
+
+density_plot(taxi,"Fare", "trip fare (USD)",
+             "Trip Cost Distribution") 
+
+```
+
+Most trips' cost are below 10 dollars. A majority of trips have fare less than 50 dollars. In addition, there is a small bump around 40, which might correlate with the bump in trip distance around 18 miles.
+
+> **Types of payment**: What are the popular ways to pay the trip, credit card or cash? The line below shows the number of payment using different types.
+
+```{r echo=FALSE, Univariate_Plots4}
+summary(taxi$Payment.Type)
+
+payment <- data.frame(table(taxi$Payment.Type))
+p <- barplot(payment$Freq, main="Type of Payment",xlab="type",ylab="Count",
+             col='lightgreen', xaxt="n")
+text(cex=1, x=p+0.25, y=-3.25, payment$Var1, xpd=TRUE, srt=30, pos=2)
+
+```
+
+The barplot indicates that almost all customers use cash or credit card to pay their trips. And more people prefered cash than credit card. We will uncover the difference in values of payment in these two dominant types in the next section.
+
+> **Companies with largest market share**:  Companywise comparison should be conducted to gain insights of the performance between companies. The variabe stores the name of a taxi company containes very long strings, which might not be displayed properly in some figures, so we shortened the name for the major four companies, which account for more than 40% of the market share, and classified other companies as 'Other'.
+
+```{r echo=FALSE, Univariate_Plots5}
+com <- data.frame(table(taxi$Company))
+com4_name <- com[(com$Freq > 6000)&(com$Freq < 100000),]
+
+taxi$Com_name <- 'Other'
+levels(taxi$Com_name) <- c(levels(taxi$Com_name),
+                           "BRT","CTA","DTA","TAS","Unknown") 
+taxi$Com_name[taxi$Company == "Blue Ribbon Taxi Association Inc."]  <- "BRT"
+taxi$Com_name[taxi$Company == "Choice Taxi Association"]  <- "CTA"
+taxi$Com_name[taxi$Company == "Dispatch Taxi Affiliation"]  <- "DTA"
+taxi$Com_name[taxi$Company == "Taxi Affiliation Services"]  <- "TAS"
+taxi$Com_name[taxi$Company == "None"]  <- "Unknown"
+
+com4 <- taxi[taxi$Com_name %in% c("BRT","CTA","DTA","TAS"), ] 
+# dataframe only with four largest companies
+com <- data.frame(table(taxi$Com_name))
+com
+# sort_com <- com[order(-com$Freq),] 
+com4_name <- com[(com$Freq > 6000)&(com$Freq < 100000),]
+
+x <- barplot(com4_name$Freq, main="Top companies",
+             xlab = 'Company',
+             ylab="Count",
+             names.arg=  com4_name$Var1,
+             col='lightgreen')
+```
+
+Taxi Affiliation Services (TAS) owned the biggest market share, and there are more than 40,000 trips carried by the taxis in this company. The amount of trips carried by all other companies is close to that by Blue Ribbon Taxi Association Inc. (BRT).  
+
+> **Geolocation of taxi trips**
+
+```{r echo=FALSE, Univariate_Plots6}
+taxi.loc <- na.omit(taxi)
+pick <- taxi.loc[, c("Pickup.Centroid.Longitude","Pickup.Centroid.Latitude")]
+drop <- taxi.loc[, c("Dropoff.Centroid.Longitude","Dropoff.Centroid.Latitude")]
+
+qmplot(Pickup.Centroid.Longitude, Pickup.Centroid.Latitude, data = pick, 
+       col = I("red"), size = I(1), darken = 0.1)
+```
+
+Most trips start out from the center of the city, while some of them scatters around airports, the University of Chicago.
+
+# Univariate Analysis
+
+> **Summary**: 
+
+### What is the structure of your dataset?
+
+There are 218,832 taxi trips in the dataset with 12 features. The variables Trip.Min (converted from Trip.Seconds), Trip.Miles, Trip.Fare are continuous variables, while Date (converted from Trip.Start.Timestamp), Hour (converted from Trip.Start.Timestamp), Company, Payment.Type, Trip.ID and Taxi.ID are factor variables. The dataset also contains geographic locations of the taxi trips in variables Pickup.Centroid.Latitude, Pickup.Centroid.Longitude, Dropoff.Centroid.Latitude and Dropoff.Centroid.Longitude.
+
+Some observations:
+
+* Most trips have trip duration less than 10 minutes.
+* The majority taxi trips have distance less than 2 miles.
+* Most trips' cost are below 10 dollars.
+* The four major companies have more than 40% of the total taxi trips, which as "BRT","CTA","DTA","TAS".
+* Cash and credit card are two dominant types of payment. And customers prefer cash than credit card.
+* Most trips start out from the center of the city. 
+
+### What is/are the main feature(s) of interest in your dataset?
+
+The main features of interest in the data set are trip duration, distance and cost. I think the volume of taxi trips, which could be calculated from the dataset, is also interesting. Our goal is to understand the general pattern of taxi trips as well as performance differences between taxi companies. 
+
+### What other features in the dataset do you think will help support your investigation into your feature(s) of interest?
+
+The variable 'Trip.Start.Timestamp' contains the exact trip start time. We could infer from this variabel abount trip hour during a day, which can be useful to understand the trip distribution over a day. Also, "Trip.ID" contains an unique ID for each trip; it can be used to calculated number of trips. Another variable "Taxi.ID" records an unique ID for each taxi is useful if we are trying to understand the travel pattern of each taxi/taxi driver.
+
+### Did you create any new variables from existing variables in the dataset?
+
+I created five variables: 'Date', 'Hour', 'Time', 'Week' and 'Trip.Min'. The first two variables are from  "Trip.Start.Timestamp" which is a variable records trip start time. 'Time' is inferred from "Hour"; it is a categorical variable, containing "Morning", "Afternoon", "Evening", and "Night" four levels. "Week" is a variable about whether a trip is completed in weekend or weekday, which is inferred from the date of trips. "Trip.Min" is calculated based on "Trip.Seconds", its function is to increase readbility of trip duration.
+
+### Of the features you investigated, were there any unusual distributions? Did you perform any operations on the data to tidy, adjust, or change the form of the data? If so, why did you do this?
+
+Basically, the distribution of trip duration, distance and cost are all skew to the right, meaning that majority trips are small trips. In this case small trips are those whose trip time are less than 10 minutes, trip distance are less than 2 miles and cost is less than 10 dollars. But there is a sharp drop in the distribution of both trip duration and distance when the corresponding values are very small, and there is a small bumps in distance and cost when the corresponding values are relatively large. I did not perform any operations on the date to change its form. 
+
+
+# Bivariate Plots Section
+
+> **Correlation Matrix**: 
+
+```{r echo=FALSE, Bivariate_Plots1}
+num <- taxi[,c('Trip.Min','Trip.Miles','Fare','Trip.Total')]
+cor(num) 
+
+pairs.panels(num, 
+             method = "pearson", # correlation method
+             hist.col = "#00AFBB",
+             density = TRUE,  # show density plots
+             ellipses = TRUE # show correlation ellipses
+             )
+```
+
+The mileage and duration of a trip tend to correlate with each other. The longer one trip, then the longer time it takes to complete. The trip milage correlates with trip duration which makes sense. Trip fare have stronger correlations with trip distance and duration than those of total cost of trips. This might due to other random factors adding to the total payment. Thus we use the variable fare to be represented as trip cost for futher analysis.
+
+> **Trip mileage vs Trip duration**: I want to look closer at scatter plots involving distance, duration and cost. So I created a sample data random sampling 10,000 trips from the whole dataset.  
+
+```{r echo=FALSE, Bivariate_Plots2}
+t_sample <- taxi[sample(nrow(taxi), 10000), ]
+
+plot(t_sample$Trip.Miles, t_sample$Trip.Min, main = 'Taxi Distance vs. Duration',
+       xlab = "trip distance (miles)", 
+     xlim = c(0,quantile(t_sample$Trip.Miles,0.998)),
+     ylim = c(0,quantile(t_sample$Trip.Min,0.998)),
+     ylab = "trip duration (min)",cex = 0.5,pch = 19,col = rgb(0, 0, 0, 0.1))
+```
+
+> **Trip mileage vs Trip fare**:
+
+```{r echo=FALSE, Bivariate_Plots3}
+plot(t_sample$Trip.Miles, t_sample$Fare, main = 'Taxi Distance vs. Fare',
+       xlab = "trip distance (mile)", 
+     xlim = c(0,quantile(t_sample$Trip.Miles,0.998)),
+     ylim = c(0,quantile(t_sample$Fare,0.998)),
+     ylab = "trip fare (USD)",cex = 0.5,pch = 19,col = rgb(0, 0, 0, 0.1))
+```
+
+From a subset of the data, trip duration does not seem to have a linear correlation with distance. Some short trips takes long time to complete, while some long distance trips take less time to finish. This might due to the fact that the traffic condition is rather complicated in the city and it is hard to predict trip duration  based on trip distance only. The plot clearly shows that there are multiple linear correlations between trip distance and cost. For the majority of trips, their cost depends on the distances. However, there are three different rate of fare (dollar per mile) as seen in the plot. What facors might lead to these difference? Are the rate of fare differs between different taxi companies? We will discuss later in Multivariate section.
+
+> **Trip duration/mileage distribution over the week**:
+
+```{r echo=FALSE, Bivariate_Plots4}
+plot(t_sample$Date,t_sample$Trip.Min,cex = 0.5,main="Trip Duration",
+     ylim = c(0,quantile(t_sample$Trip.Min, 0.995) ),
+     xlab="Date", ylab="Time (min)")
+```
+
+```{r echo=FALSE, Bivariate_Plots4_1}
+plot(t_sample$Date,t_sample$Trip.Miles,cex = 0.5,main="Trip Distance",
+     ylim = c(0,quantile(t_sample$Trip.Miles, 0.995) ),
+     xlab="Date", ylab="Distance (mile)")
+```
+
+The individual trip duration and mileage does not vary much during the time of interest. However, Monday (corresponds to '01/02') has seen highest range of both trip duration and mileage. 
+
+> **Number of trips per taxi per day**: How many trips does each taxi driver carry? To answer this question, we assume that one taxi driver opertate only one taxi during the time of interest.
+
+```{r echo=FALSE, Bivariate_Plots5}
+gb <- taxi %>%
+    group_by(Date, Taxi.ID) %>%
+    count(Taxi.ID)
+
+plot(gb$Date,gb$n,cex = 0.5,
+     main="Number of Trips per Taxi per Day",xlab="Date", 
+     ylab="Number of trips" ) 
+```
+
+The number of trips carried by each taxi increases from Monday (corresponds to '01/02') to Friday (corresponds to '01/06'), and decreases from Friday to Saturday (corresponds to '01/07'). The number of trips completed by each taxi driver on Friday and Sunday have close median, which is around 11 or so, while the median of that on Monday is around 8 or so.
+
+> **Time of work per taxi per day**: How many hours does each taxi driver work?
+
+```{r echo=FALSE, Bivariate_Plots6}
+gb1 <- taxi %>%
+    group_by(Date, Taxi.ID) %>%
+    summarize(sum_time = sum(Trip.Min))
+
+plot(gb1$Date,gb1$sum_time,cex = 0.5,
+     main="Time of Work per Taxi per Day",xlab="Date", 
+     ylab="Work time (min)" ) 
+
+```
+
+We see that the time of work per taxi driver follows similar trend of the number of trips per driver. The median of working hours on Sunday and Friday are highest, reaching 150 minutes, while the least working hours is around 100 minutes on Monday.
+
+> **Change of number of rides and trip cost over a day**: How does the total number of trips and total cost of trips change during the time of a day? We calculated the the sum of these two values at different hours (from 0 to 23) over the whole week, and obtained the average of these values for each day. We called these average total number of trips and average total trip cost respectively.
+
+```{r echo=FALSE, Bivariate_Plots7}
+gb1 <- taxi %>%
+    group_by(Hour) %>%
+    count(Hour)
+gb1$n <- gb1$n / 7 
+
+gb2 <- taxi %>%
+    group_by(Hour) %>%
+    summarize(sum_fare = sum(Fare))
+gb2$sum_fare <- gb2$sum_fare / 7
+
+par(mfrow=c(1,2))
+plot(gb1, type = "l", main="Trip volume over a day",
+        xlab="Hour", ylab="Total number of trips",xlim=c(0,24))
+plot(gb2, type = "l",main="Trip cost over a day",
+        xlab="Hour", ylab="Total trip fare (USD)",xlim=c(0,24))
+```
+
+The average total number of trips and average total trip cost have simlar patterns over the day. Both decrease from midninght to 5 am, and starts to increase gradually from 5 am to 7 pm in the evening, and then drop again from 7 pm until midnight. Both plots have a peak around 7 pm, these customers must be taking a taxi to head home, to go to dinner, and to go to other leisure activites, etc. Note that there is a small bump around 9am on the figure on the left, this might be large number of commuters taking taxis to go to work in the morning.
+
+```{r echo=FALSE, Bivariate_Plots7_1}
+plot(factor(taxi$Time),taxi$Trip.Min,cex = 0.5,
+     main="Distribution of Trip Duration at Different Times of A Day",
+     ylim = c(0,quantile(taxi$Trip.Min, 0.95) ),
+     xlab="Different times of a day", 
+     ylab="Trip duration (min)")
+
+```
+
+Clearly, taxi trips start off at morning and afternoon tend to have short range of time duration, while night trips have largest range of time duration. The relationship between trip duration and trip start time will be explored more in the next section.
+
+> **Change of trip lenght durint a day**: In the last section, we found that trip volume changes over the time of the day, we are now interested in whether trip duration follows similar patterns. 
+
+```{r echo=FALSE, Multivariate_Plots1}
+mosaicplot(table(taxi$Hour, taxi$Length), 
+           main='Trip Length at Differnt Times of A Day', 
+           shade=TRUE)
+```
+
+The mosaic plot shows that trips start from 4 am to 3 pm are mainly short trips. There are more medium and long trips after 5 pm. 
+
+> **Companywise trip cost**:
+
+```{r echo=FALSE, Bivariate_Plots8}
+plot(factor(taxi$Com_name),taxi$Fare,cex = 0.5,
+     main="Trip cost of different companies",
+     ylim = c(0,quantile(taxi$Fare, 0.95) ),
+     xlab="Company", ylab="Fare (USD)")
+```
+
+We do not see much difference in the trip cost of each individual trips from differenct taxi companies. All of them have median around 9 dollars or so. 
+
+# Bivariate Analysis
+
+> **Summary**
+
+### Talk about some of the relationships you observed in this part of the investigation. How did the feature(s) of interest vary with other features in the dataset?
+
+* There is no strong linear correlation between trip distance and duration.
+* We see three dominate rate of fare (dollar per mile) of taxi trips. 
+* The individual trip duration and mileage does not vary much during the time of interest.
+* The total number of trips and total cost have simlar patterns over the day. Both decrease from midninght to 5 am, and starts to increase gradually from 5 am to 7 pm in the evening, and then drop again from 7 pm until midnight.
+* Trip cost of individal trips do not differ much between companies. 
+
+### Did you observe any interesting relationships between the other features (not the main feature(s) of interest)?
+
+I think the most interesting finding is that the change of trip volume and total trip revenue generated over a day. We could infer passengers' travel demand and pattern from the relationships between trip start time, trip volume and revenue . 
+
+### What was the strongest relationship you found?
+
+The strongest correlation occur between indivudal trip mileage and fare. We found that more than one rate of fare across all trips. The reason of difference is to be explored in the next section. 
+
+# Multivariate Plots Section
+
+> **Trip volume/revenue comparison**: Let's investigate the change of trip revenue over a day and compare this change with different companies.
+
+```{r echo=FALSE, Multivariate_Plots2}
+gb3 <- taxi %>%
+    group_by(Hour, Com_name) %>%
+    summarize(sum_fare = sum(Fare))
+gb6 <- taxi %>%
+    group_by(Hour, Com_name) %>%
+    count(Com_name)
+
+p1 <- ggplot(data = gb6, aes(x = Hour, y = n)) + 
+  ylab('Total number of trips') + 
+  geom_line(aes(color = Com_name)) +
+  ggtitle("Total Trip Volume over a Day") +
+  scale_colour_brewer(name = "Company",palette = "Accent")
+
+p2 <- ggplot(data = gb3, aes(x = Hour, y = sum_fare)) + 
+   ylab('Total revenue (USD)') + 
+  geom_line(aes(color = Com_name)) +
+  ggtitle("Total Trip Revenue over a Day") +
+  scale_colour_brewer(name = "Company",palette = "Accent")
+
+grid.arrange(p1, p2, nrow = 2) 
+
+```
+
+Total trip volume and revenue are shown among different companies. The figure reveals that both volume and revenue of taxi trips across all companies follows alike pattern over a day. Total trip revenue have a peak at 5 pm or so and a valley around 4 am or so. The revenue gradually increase during the daytime. There are also bumps in some of the curves, and all of them are during the daytime. 
+
+> **Does different time of day affect taxi speed**: We already knew that trip duration and trip mileage do not have linear correaltion, i.e. taxis do not have constant speed. Let's investigate whether trip start time plays a role in contributing to the differnce in taxi speed. 
+
+```{r echo=FALSE, Multivariate_Plots3}
+myColors <- brewer.pal(4,"Accent")
+names(myColors) <- levels(com4$Time)
+colScale <- scale_colour_manual(name = "grp",values = myColors)
+
+p5 <- ggplot(com4, aes(Trip.Min, Trip.Miles)) + 
+  geom_point(aes(colour = factor(Time)),alpha = 0.8, size = 1.5) +
+  xlim(0,quantile(com4$Trip.Min,0.998))+
+  ylim(0,quantile(com4$Trip.Miles,0.998))+
+  xlab('Trip duration (min)') + 
+  ylab('Trip distance (mile)') +
+  colScale +
+  ggtitle("Trip Duration vs. Trip Mileage at Different Times of a Day")
+  theme(legend.title=element_blank(),legend.position = 'bottom')
+
+p5
+```
+
+It seems like night trips are short ones in terms of time distance and duration. However, some  night trips take longer time to complete compared with other night trips even for the same distance. We see clusters of morning and afternoon trips with distance around 18 miles or so, and afternoon trips take longer than morning trips for the same distance. Evening trips are the most spread trips in terms of duration and distance. Customers must have more diverse trip purposes than other kinds of trips.
+
+> **Rate of fare comparison**: Do different companies have different rate of fare?
+
+```{r echo=FALSE, Multivariate_Plots4}
+tas <- com4[com4$Com_name == "TAS",]
+brt <- com4[com4$Com_name == "BRT",]
+cta <- com4[com4$Com_name == "CTA",]
+dta <- com4[com4$Com_name == "DTA",]
+
+scatter_plot <- function(dat,title){
+  p <- ggplot(dat, aes(x = Trip.Miles, y = Fare)) + 
+    geom_point(alpha = 0.2, size = 0.5) + 
+    xlim(0,quantile(dat[, "Trip.Miles"],0.998)) +  
+    ylim(0,quantile(dat[, "Fare"],0.998)) +   
+    xlab("Trip distance (mile)") + 
+    ggtitle(title) 
+return(p)  
+}
+
+p11 <- scatter_plot(tas,"TAS")
+p12 <- scatter_plot(brt,"BRT")
+p13 <- scatter_plot(cta,"CTA")
+p14 <- scatter_plot(dta,"DTA") 
+grid.arrange(p11,p12,p13, p14, ncol = 2, nrow  = 2)
+
+```
+
+Let's plot the histogram to investigate the rate for fares at different companies. 
+
+```{r echo=FALSE, Multivariate_Plots4_1}
+com4_fare <- com4[(com4$Trip.Min > 0)&(com4$Trip.Miles > 0),]
+com4_fare$FareMin <- com4_fare$Fare / com4_fare$Trip.Min
+com4_fare$FareMil <- com4_fare$Fare / com4_fare$Trip.Miles
+
+hist_plot <- function(x,xlab,title){
+  p <- ggplot(com4_fare, aes_string(x, fill = "Com_name")) + 
+    geom_histogram(bins = 30) +
+    xlim(0,quantile(com4_fare[,x],0.998)) +
+    xlab(xlab) + 
+    ggtitle(title) +
+    theme(legend.title=element_blank(),
+          legend.position = 'bottom')
+return(p)
+}
+
+p3 <- hist_plot("FareMil","Rate of fare (USD/mile)",
+                "Fare vs. Mileage at Different Companies")
+p4 <-  hist_plot("FareMin","Rate of fare (USD/min)",
+                 "Fare vs. Time at Different Companies")
+grid.arrange(p3, p4, ncol = 2)
+```
+
+Some trips have very high fare despite that its distance is close to zero. For these kind of trips, there is no fixed rate of fare and we exclude this kind of trips for the purpose of this analysis. All of the four largest companies have rate of fare around 2.5 dollar/mile, which we may call a standard price. This price is the dominant price at CTA and DTA. But the proportion of trips with standard price vary very much across companies. There is another very high price rate, which is around 45 dollar/mile, at TAS and BRT. Actually, the proportion of this high rate is larger than that of the stardard one at BRT. There are a small portion of trips have this high rate at TAS.
+
+> **Different payment types**: We learned that customers prefer cash than credit card, but how's the price paid by cash and credit card differ from each other?
+
+```{r echo=FALSE, Multivariate_Plots5}
+cc <- taxi[taxi$Payment.Type %in% c('Cash','Credit Card'),]
+  
+p0 <- ggplot(cc, aes(x = Payment.Type, y = Fare, fill = Payment.Type)) + 
+  geom_boxplot() +
+  facet_wrap(~ Date, ncol = 7) 
+
+ylim1 = boxplot.stats(cc$Fare)$stats[c(1, 5)]
+# scale y limits based on ylim1
+p01 <- p0 + coord_cartesian(ylim = ylim1*2) +
+  ggtitle("Fare Distribution of Different Payment Type") +
+  theme(axis.text.x= element_text(angle = 30, hjust = 1))
+p01
+
+```
+
+The median of fare paied by credit card is always higher than fare paid by cash. In addition, the range of fare paid by credit card is always wider than that by cash. Moreover, trip fare on Monday has the largest and median range among all days. 
+
+> **Statistics of taxi driver**: How many trips does each taxi driver complete per day? How many hours do they work? How much money do they make per day? What is the average total mileage per taxi per day? 
+
+```{r echo=FALSE, Multivariate_Plots6}
+# get average fare/mile/minute per taxi per day
+gb4 <- taxi %>%
+    group_by(Taxi.ID) %>%
+    summarize(avg_fare = sum(Fare) / 7,
+              avg_mile = sum(Trip.Miles) / 7,
+              avg_min = sum(Trip.Min) / 7)
+
+gb5 <- taxi %>%
+    group_by(Taxi.ID) %>%
+    count(Taxi.ID)
+gb5$n <- gb5$n / 7
+```
+
+On average, a taxi driver carried 9 trips per day during the one-week study period. There is even driver who finished more than 30 trips per day.
+
+```{r echo=FALSE, Multivariate_Plots6_0}
+summary(gb5$n) 
+```
+
+The statistics of of average total fare per taxi driver per day is shown below. Drivers daily earning is around 113 dollars on average.
+
+```{r echo=FALSE, Multivariate_Plots6_1}
+summary(gb4$avg_fare) 
+```
+
+The statistics of average total mileage per taxi driver per day indicates that only 25% of drivers have mileage more than 40 miles per day.
+
+```{r echo=FALSE, Multivariate_Plots6_2}
+summary(gb4$avg_mile) 
+#Statistics of Average total Fare per Taxi Driver per Day
+```
+
+The statistics of average total driving time (min) per Taxi driver per day shows that half of taxi drivers work only 104 minutes, less than 2 hours.
+
+```{r echo=FALSE, Multivariate_Plots6_3}
+summary(gb4$avg_min)
+#Statistics of Average total Fare per Taxi Driver per Day
+```
+
+```{r echo=FALSE, Multivariate_Plots6_4}
+par(mfrow=c(2,2))
+hist(gb5$n, freq=F, main='Average Number of Trips', 
+     xlab = "count",col="#66C2A5")
+hist(gb4$avg_mile, freq=F, main='Average Trip Distance', 
+  xlab = "Miles", col="#FC8D62")
+hist(gb4$avg_min, freq=F, main='Average Work Time', 
+  xlab = "Minutes",col="#8DA0CB")
+hist(gb4$avg_fare, freq=F, main='Average Fare', 
+     xlab = "Fare (USD)", col="#E78AC3")
+
+```
+
+Some insights can be gained from the histograms. Most taxi drivers completed only 1 to 2 trips per day and drived less than 25 miles per day, we categorize such drivers as part-time drivers. For drivers who worked more time has completed more trips, ranging from 5 to 30 and their total trip milegae ranges from 10 to 100 miles per day. Most drivers work 150 minutes on average and made 150 dollars per day. This statistic does not seem reasonable as taxi drivers work much less than we expected. The problem lies in that each "Taxi.ID" contains a string with 128 characters, and we considered one taxi must have exactly the same "Taxi.ID". It is thus highly possible that a taxi have multiple "Taxi.ID" values due to data errors.
+
+# Multivariate Analysis
+
+### Talk about some of the relationships you observed in this part of the investigation. Were there features that strengthened each other in terms of looking at your feature(s) of interest?
+
+* Trip revenue generated from different companies follow similar patterns during the day: have a peak at 5 pm or so and a valley around 4 pm or so. The revenue gradually increase during the daytime. 
+* Trip duration and distance are sensitive to the times of the day. Night trips are shorter, and evening trips are more spread. 
+* Different companies have different pricing strategies. Actually, some taxi companies have more than one rate of fare. 
+* There are features that strengthened each other when we looking at the features of interest. For example, we used the feature "Company" to explained the illinearity between trip fare and mileage, and the feature "Time" plays an important role in explaining correlation between trip duration and distance.
+
+### Were there any interesting or surprising interactions between features?
+
+It is surprising to find that on average most drivers only work 150 minutes and made 150 dollars per day. Less than 5% of drivers work more than 5 hours per day. This finding may subject to errors due to the fact that under our assumptions, one driver only associates with one particular taxi ID.
+
+------
+
+# Final Plots and Summary
+
+> **Change of trip volume and fare**
+
+### Plot One
+
+```{r echo=FALSE, Plot_One}
+grid.arrange(p1, p2, nrow = 2) 
+```
+
+### Description One
+
+This figure demostrates that the change of trip volumn and revenue over a day follow similar pattersns no matter what companies the taxi belongs to. Both volume and revenue have a peak at 5 pm or so, a valley around 4 am or so and gradually increase during the daytime.  There are also bumps during the daytime occuring in some curves. The general trend refects the taxi trip demand over a day.
+
+### Plot Two
+
+```{r echo=FALSE, Plot_Two}
+grid.arrange(p3, p4, ncol = 2)
+```
+
+### Description Two
+
+The distribution of rate of fare among four major companies is shown in the figure above. The left one is using dollar per mile as its unit, and the unit of the right one is dollar per minute. Most trips have rate of fare around 2.5 dollar per mile, or 1 dollar per minute. It seems that companies are consistent on trip price in dollar per min as the plot follows a bell shape curve with most rates of fare are in a certain range. However, some companies, such as BRT and TAS have higher rate of fare in dollar per mile. Actually, the price in BRT is dominiate by very high rate of fare around 40 dollars per mile. 
+
+### Plot Three
+
+```{r echo=FALSE, Plot_Three}
+p5
+```
+
+### Description Three
+
+This figure reveals how trip start time contributes to the difference in trip duration and distance. Night trips are short ones in terms of time distance and duration. However, some of night trips take longer to complete compared with other night trips with equivalent distances. We see clusters of morning and afternoon trips with distance around 18 miles or so, and a lot afternoon trips take longer than morning trips for the same distance. Evening trips are the most spread trips in terms of duration and distance. Customers must have more diverse trip purposes than other kinds of trips.
+
+------
+
+# Reflection
+
+> **Findings**: Some interesting findings including: 1) Total trip volume and revenue follow similar trend during a day. 2) Trip start time plays an important role in contributing to the difference in trip duration and distance. 3) The rate of fare of taxi trips is not fixed. In fact, companies have different pricing strategies.
+
+> **Problems encounted**: 
+We found that the data contains many extreme records, some taxi trips cost a lot of money but its distance is very short, such as a zero mile trip cost more than 1000 dollars. Additonally, there are also observations with highly implausible values. 
+It is supersing to find that most drivers work 150 minutes on average and made 150 dollars per day. This finding subject to erros as we assume each taxi ID corresponds to a driver, whereas it is possible that a driver is associated with multiple taxi IDs, or there are errors in the variable containing taxi ID.
+The most difficult part is to find the right questions for this dataset. We need to find the right questions to motivate our analysis. Also, new variables are created based on the questions we wanted to explore. 
+
+> **Future work**: 
+One dimension not explored in this analysis was the change of geographic locations distribution of trips among different times of day. With what we saw of the travel behavior of passengers we could identify locations more popular with customers and potentially identify areas of the city with demand for future taxi stations.
+Another direction that can be pursued is to predict trip volume and revenue using this dataset. Different times of day is already shown to be highly correlated with trip volume and revenue. Other features such as company, geolocation, tolls can also be tested to predict the volume and cost of taxi rides.
